@@ -1,5 +1,4 @@
-/* eslint-env jest */
-import { imgSnapshotTest, renderGraph } from '../../helpers/util';
+import { imgSnapshotTest, renderGraph } from '../../helpers/util.ts';
 
 describe('Class diagram', () => {
   it('1: should render a simple class diagram', () => {
@@ -31,9 +30,8 @@ describe('Class diagram', () => {
         test()
       }
       `,
-      {logLevel : 1}
+      { logLevel: 1 }
     );
-    cy.get('svg');
   });
 
   it('2: should render a simple class diagrams with cardinality', () => {
@@ -62,7 +60,6 @@ describe('Class diagram', () => {
       `,
       {}
     );
-    cy.get('svg');
   });
 
   it('3: should render a simple class diagram with different visibilities', () => {
@@ -80,7 +77,6 @@ describe('Class diagram', () => {
       `,
       {}
     );
-    cy.get('svg');
   });
 
   it('4: should render a simple class diagram with comments', () => {
@@ -110,7 +106,6 @@ describe('Class diagram', () => {
       `,
       {}
     );
-    cy.get('svg');
   });
 
   it('5: should render a simple class diagram with abstract method', () => {
@@ -122,7 +117,6 @@ describe('Class diagram', () => {
       `,
       {}
     );
-    cy.get('svg');
   });
 
   it('6: should render a simple class diagram with static method', () => {
@@ -134,7 +128,6 @@ describe('Class diagram', () => {
       `,
       {}
     );
-    cy.get('svg');
   });
 
   it('7: should render a simple class diagram with Generic class', () => {
@@ -154,7 +147,6 @@ describe('Class diagram', () => {
       `,
       {}
     );
-    cy.get('svg');
   });
 
   it('8: should render a simple class diagram with Generic class and relations', () => {
@@ -175,7 +167,6 @@ describe('Class diagram', () => {
       `,
       {}
     );
-    cy.get('svg');
   });
 
   it('9: should render a simple class diagram with clickable link', () => {
@@ -197,7 +188,6 @@ describe('Class diagram', () => {
       `,
       {}
     );
-    cy.get('svg');
   });
 
   it('10: should render a simple class diagram with clickable callback', () => {
@@ -219,7 +209,6 @@ describe('Class diagram', () => {
       `,
       {}
     );
-    cy.get('svg');
   });
 
   it('11: should render a simple class diagram with return type on method', () => {
@@ -234,7 +223,6 @@ describe('Class diagram', () => {
       `,
       {}
     );
-    cy.get('svg');
   });
 
   it('12: should render a simple class diagram with generic types', () => {
@@ -250,7 +238,6 @@ describe('Class diagram', () => {
       `,
       {}
     );
-    cy.get('svg');
   });
 
   it('13: should render a simple class diagram with css classes applied', () => {
@@ -268,7 +255,6 @@ describe('Class diagram', () => {
       `,
       {}
     );
-    cy.get('svg');
   });
 
   it('14: should render a simple class diagram with css classes applied directly', () => {
@@ -284,10 +270,9 @@ describe('Class diagram', () => {
       `,
       {}
     );
-    cy.get('svg');
   });
 
-  it('15: should render a simple class diagram with css classes applied two multiple classes', () => {
+  it('15: should render a simple class diagram with css classes applied to multiple classes', () => {
     imgSnapshotTest(
       `
     classDiagram
@@ -299,7 +284,6 @@ describe('Class diagram', () => {
       `,
       {}
     );
-    cy.get('svg');
   });
 
   it('16: should render multiple class diagrams', () => {
@@ -352,7 +336,6 @@ describe('Class diagram', () => {
       ],
       {}
     );
-    cy.get('svg');
   });
 
   // it('17: should render a class diagram when useMaxWidth is true (default)', () => {
@@ -408,4 +391,108 @@ describe('Class diagram', () => {
   //      // expect(svg).to.not.have.attr('style');
   //     });
   // });
+
+  it('19: should render a simple class diagram with notes', () => {
+    imgSnapshotTest(
+      `
+    classDiagram
+      note "I love this diagram!\nDo you love it?"
+      class Class10 {
+        int id
+        size()
+      }
+      note for Class10 "Cool class\nI said it's very cool class!"
+      `,
+      { logLevel: 1 }
+    );
+  });
+
+  it('should render class diagram with newlines in title', () => {
+    imgSnapshotTest(`
+      classDiagram
+        Animal <|-- \`Du\nck\`
+        Animal : +int age
+        Animal : +String gender
+        Animal: +isMammal()
+        Animal: +mate()
+        class \`Du\nck\` {
+          +String beakColor
+          +String featherColor
+          +swim()
+          +quack()
+        }
+      `);
+  });
+
+  it('should render class diagram with many newlines in title', () => {
+    imgSnapshotTest(`
+    classDiagram
+      class \`This\nTitle\nHas\nMany\nNewlines\` {
+        +String Also
+        -Stirng Many
+        #int Members
+        +And()
+        -Many()
+        #Methods()
+      }
+    `);
+  });
+
+  it('should render with newlines in title and an annotation', () => {
+    imgSnapshotTest(`
+    classDiagram
+      class \`This\nTitle\nHas\nMany\nNewlines\` {
+        +String Also
+        -Stirng Many
+        #int Members
+        +And()
+        -Many()
+        #Methods()
+      }
+      &lt;&lt;Interface&gt;&gt; \`This\nTitle\nHas\nMany\nNewlines\`  
+    `);
+  });
+
+  it('should handle newline title in namespace', () => {
+    imgSnapshotTest(`
+    classDiagram
+      namespace testingNamespace {
+      class \`This\nTitle\nHas\nMany\nNewlines\` {
+        +String Also
+        -Stirng Many
+        #int Members
+        +And()
+        -Many()
+        #Methods()
+      }
+    }
+    `);
+  });
+
+  it('should handle newline in string label', () => {
+    imgSnapshotTest(`
+      classDiagram
+        class A["This has\na newline!"] {
+          +String boop
+          -Int beep
+          #double bop
+        }
+
+        class B["This title also has\na newline"]
+        B : +with(more)
+        B : -methods()
+      `);
+  });
+
+  it('should handle notes with anchor tag having target attribute', () => {
+    renderGraph(
+      `classDiagram
+        class test { }
+        note for test "<a href='https://mermaid.js.org/' target="_blank"><code>note about mermaid</code></a>"`
+    );
+
+    cy.get('svg').then((svg) => {
+      cy.get('a').should('have.attr', 'target', '_blank').should('have.attr', 'rel', 'noopener');
+    });
+  });
 });
